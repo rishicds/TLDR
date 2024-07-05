@@ -5,6 +5,7 @@ import { FiMenu, FiArrowUpRight } from "react-icons/fi";
 import useMeasure from "react-use-measure";
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
 
 const NavBar = () => {
   return (
@@ -99,13 +100,20 @@ const Logo = () => (
   </span>
 );
 
-const Links = () => (
-  <div className="hidden items-center gap-2 md:flex">
-    <GlassLink text="Note site" href="/notes" />
-    <GlassLink text="Team" href="/team" />
-  </div>
-);
+const Links = () => {
+  const pathname = usePathname();
 
+  return (
+    <div className="hidden items-center gap-2 md:flex">
+      <GlassLink text="Note site" href="/notes" />
+      {pathname === '/team' ? (
+        <GlassLink text="Home" href="/" />
+      ) : (
+        <GlassLink text="Team" href="/team" />
+      )}
+    </div>
+  );
+};
 interface GlassLinkProps {
   text: string;
   href: string;
