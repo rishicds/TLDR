@@ -12,7 +12,7 @@ export default function Page() {
         }}
       />
       <div className="mt-4 text-center text-sm">
-        <p className="text-white">Don't have an account? <Link href="/sign-up" className="text-blue-600 hover:underline">Sign up</Link></p>
+        <p className="text-white">Dont have an account? <Link href="/sign-up" className="text-blue-600 hover:underline">Sign up</Link></p>
       </div>
     </div>
   )
