@@ -19,14 +19,14 @@ export const downloadFromS3 = async (file_key: string): Promise<string> => {
       };
 
       const obj = await s3.getObject(params);
-      
-      // Create 'uploads' directory if it doesn't exist
-      const uploadsDir = path.join(process.cwd(), 'uploads');
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
+
+      // Create '/tmp' directory if it doesn't exist
+      const tmpDir = path.join('/tmp');
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir);
       }
 
-      const file_name = path.join(uploadsDir, `${Date.now().toString()}.pdf`);
+      const file_name = path.join(tmpDir, `${Date.now().toString()}.pdf`);
 
       if (obj.Body instanceof require("stream").Readable) {
         const file = fs.createWriteStream(file_name);
