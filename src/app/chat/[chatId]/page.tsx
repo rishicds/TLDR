@@ -37,8 +37,8 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
     return (
       <div className="flex items-center justify-center h-screen bg-black">
         <div className="bg-black p-6 rounded shadow-lg text-center">
-          <h2 className="text-2xl font-bold mb-4">Please Use a Desktop or Laptop</h2>
-          <p>This page is best viewed on a desktop or laptop computer.</p>
+          <h2 className="text-2xl font-bold text-white mb-4">Please Use a Desktop or Laptop</h2>
+          <p className="text-white">This page is best viewed on a desktop or laptop.(Buy premium so I make it mobile UI faster)</p>
         </div>
       </div>
     );

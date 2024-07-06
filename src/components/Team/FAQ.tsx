@@ -5,9 +5,9 @@ import useMeasure from "react-use-measure";
 
 const BasicFAQ = () => {
   return (
-    <div className="px-4 py-12">
+    <div className="px-4 py-12 text-white">
       <div className="mx-auto max-w-3xl">
-        <h3 className="mb-4 text-center text-white text-3xl font-semibold">
+        <h3 className="mb-4 text-center text-3xl font-semibold">
           Frequently asked questions
         </h3>
         <Question title="Why should I buy TL;DR Premium?" defaultOpen>
@@ -59,13 +59,13 @@ const Question = ({
         <motion.span
           variants={{
             open: {
-              color: "rgba(3, 6, 23, 0)",
+              color: "rgba(255, 255, 255, 1)",
             },
             closed: {
-              color: "rgba(3, 6, 23, 1)",
+              color: "rgba(255, 255, 255, 1)",
             },
           }}
-          className="bg-gradient-to-r from-violet-600 text-black to-indigo-600 bg-black text-left text-lg font-medium"
+          className="text-left text-lg font-medium"
         >
           {title}
         </motion.span>
@@ -77,7 +77,7 @@ const Question = ({
             },
             closed: {
               rotate: "0deg",
-              color: "#030617",
+              color: "rgb(255, 255, 255)",
             },
           }}
         >
@@ -90,7 +90,7 @@ const Question = ({
           height: open ? height : "0px",
           marginBottom: open ? "24px" : "0px",
         }}
-        className="overflow-hidden text-slate-200"
+        className="overflow-hidden"
       >
         <p ref={ref}>{children}</p>
       </motion.div>

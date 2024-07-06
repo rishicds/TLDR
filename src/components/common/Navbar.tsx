@@ -95,9 +95,9 @@ const Cursor = ({
 };
 
 const Logo = () => (
-  <span className="pointer-events-none relative left-0 top-[50%] z-10 text-4xl font-black text-white mix-blend-overlay md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
-    TL;DR
-  </span>
+  <Link href="/" className="pointer-events-auto relative left-0 top-[50%] z-10 text-4xl font-black text-white mix-blend-overlay md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
+    <span>TL;DR</span>
+  </Link>
 );
 
 const Links = () => {
@@ -135,7 +135,7 @@ const GlassLink = ({ text, href }: GlassLinkProps) => {
 
 const TextLink = ({ text }: { text: string }) => {
   return (
-    <a href="#" className="text-white/90 transition-colors hover:text-white">
+    <a href="/team" className="text-white/90 transition-colors hover:text-white">
       {text}
     </a>
   );
@@ -191,7 +191,7 @@ const MobileMenu = ({ menuOpen }: { menuOpen: boolean }) => {
     >
       <div ref={ref} className="flex items-center justify-between px-4 pb-4">
         <div className="flex items-center gap-4">
-          <TextLink text="Notes" />
+          <TextLink text="Notes"  />
           <TextLink text="Team" />
         </div>
         <UserButton afterSignOutUrl="/" />
