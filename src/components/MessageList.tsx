@@ -12,14 +12,19 @@ const MessageList = ({ messages, isLoading }: Props) => {
   if (isLoading) {
     return (
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <Loader2 className="w-6 h-6 animate-spin" />
+        <Loader2 className="w-6 h-6 animate-spin text-white" />
       </div>
     );
   }
   if (!messages) return <></>;
+
   return (
     <div className="flex flex-col gap-2 px-4">
       {messages.map((message) => {
+        const userMessageStyle = {
+          backgroundImage: "linear-gradient(to right, #EF4444, #2563EB)",
+        };
+
         return (
           <div
             key={message.id}
@@ -30,11 +35,13 @@ const MessageList = ({ messages, isLoading }: Props) => {
           >
             <div
               className={cn(
-                "rounded-lg px-3 text-sm py-1 shadow-md ring-1 ring-gray-900/10",
+                "rounded-lg px-3 text-sm py-1 shadow-md ring-1",
                 {
-                  "bg-red-600 text-white": message.role === "user",
+                  "bg-gradient-to-r from-red-600 to-blue-500 text-white ring-red-700/50": message.role === "user",
+                  "bg-gray-800 text-gray-300 ring-gray-700/50": message.role === "assistant",
                 }
               )}
+              style={message.role === "user" ? userMessageStyle : {}}
             >
               <p>{message.content}</p>
             </div>

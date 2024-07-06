@@ -35,8 +35,8 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
 
   if (isMobile) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="bg-white p-6 rounded shadow-lg text-center">
+      <div className="flex items-center justify-center h-screen bg-black">
+        <div className="bg-black p-6 rounded shadow-lg text-center">
           <h2 className="text-2xl font-bold mb-4">Please Use a Desktop or Laptop</h2>
           <p>This page is best viewed on a desktop or laptop computer.</p>
         </div>

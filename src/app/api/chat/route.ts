@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { chats, messages as _messages } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export const runtime = "edge";
 
@@ -13,13 +14,23 @@ const config = new Configuration({
 });
 const openai = new OpenAIApi(config);
 
+const s3Client = new S3Client({
+  region: "ap-southeast-2",
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY!,
+  },
+});
+
 export async function POST(req: Request) {
   try {
     const { messages, chatId } = await req.json();
+
     const _chats = await db.select().from(chats).where(eq(chats.id, chatId));
-    if (_chats.length != 1) {
-      return NextResponse.json({ error: "chat not found" }, { status: 404 });
+    if (_chats.length !== 1) {
+      return NextResponse.json({ error: "Chat not found" }, { status: 404 });
     }
+
     const fileKey = _chats[0].fileKey;
     const lastMessage = messages[messages.length - 1];
     const context = await getContext(lastMessage.content, fileKey);
@@ -36,10 +47,9 @@ export async function POST(req: Request) {
       ${context}
       END OF CONTEXT BLOCK
       AI assistant will take into account any CONTEXT BLOCK that is provided in a conversation.
-      If the context does not provide the answer to question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
-      AI assistant will not apologize for previous responses, but instead will indicated new information was gained.
-      AI assistant will not invent anything that is not drawn directly from the context.
-      `,
+      If the context does not provide the answer to the question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
+      AI assistant will not apologize for previous responses, but instead will indicate new information was gained.
+      AI assistant will not invent anything that is not drawn directly from the context.`,
     };
 
     const response = await openai.createChatCompletion({
@@ -50,9 +60,10 @@ export async function POST(req: Request) {
       ],
       stream: true,
     });
+
     const stream = OpenAIStream(response, {
       onStart: async () => {
-        // save user message into db
+        // Save user message into the database
         await db.insert(_messages).values({
           chatId,
           content: lastMessage.content,
@@ -60,7 +71,7 @@ export async function POST(req: Request) {
         });
       },
       onCompletion: async (completion) => {
-        // save ai message into db
+        // Save AI message into the database
         await db.insert(_messages).values({
           chatId,
           content: completion,
@@ -68,6 +79,69 @@ export async function POST(req: Request) {
         });
       },
     });
+
     return new StreamingTextResponse(stream);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error handling POST request:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { chatId } = await req.json();
+
+    if (!chatId) {
+      return NextResponse.json({ error: "Chat ID is required" }, { status: 400 });
+    }
+
+    // Fetch the chat to get the fileKey
+    const chatToDelete = await db.select().from(chats).where(eq(chats.id, chatId)).limit(1);
+
+    if (chatToDelete.length === 0) {
+      return NextResponse.json({ error: "Chat not found" }, { status: 404 });
+    }
+
+    const fileKey = chatToDelete[0].fileKey;
+
+    // Delete messages first due to foreign key constraint
+    const deletedMessages = await db.delete(_messages).where(eq(_messages.chatId, chatId));
+
+    // Then delete the chat
+    const deletedChat = await db.delete(chats).where(eq(chats.id, chatId));
+
+    // If there's a fileKey, delete the file from S3
+    let fileDeleted = false;
+    if (fileKey) {
+      const deleteParams = {
+        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
+        Key: fileKey,
+      };
+
+      try {
+        await s3Client.send(new DeleteObjectCommand(deleteParams));
+        console.log(`File deleted successfully: ${fileKey}`);
+        fileDeleted = true;
+      } catch (s3Error) {
+        console.error("Error deleting file from S3:", s3Error);
+        // Note: We're not returning here, as we want to inform the client that the chat and messages were deleted even if S3 deletion fails
+      }
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      deletedChat: deletedChat.rowCount, 
+      deletedMessages: deletedMessages.rowCount,
+      deletedFile: fileDeleted
+    }, { status: 200 });
+
+  } catch (error) {
+    console.error("Error handling DELETE request:", error);
+    
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
+  }
 }

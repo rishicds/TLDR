@@ -29,6 +29,7 @@ const ChatComponent = ({ chatId }: Props) => {
     },
     initialMessages: data || [],
   });
+
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
@@ -38,13 +39,14 @@ const ChatComponent = ({ chatId }: Props) => {
       });
     }
   }, [messages]);
+
   return (
     <div
-      className="w-full h-full overflow-auto flex flex-col"
+      className="w-full h-full overflow-auto flex flex-col bg-gray-900 text-white"
       id="message-container"
     >
       {/* header */}
-      <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit">
+      <div className="sticky top-0 inset-x-0 p-2 bg-gray-800 h-fit">
         <h3 className="text-xl font-bold">Chat</h3>
       </div>
 
@@ -53,17 +55,17 @@ const ChatComponent = ({ chatId }: Props) => {
 
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-white"
+        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-gray-800"
       >
         <div className="flex">
           <Input
             value={input}
             onChange={handleInputChange}
             placeholder="Ask your question :)"
-            className="w-full"
+            className="w-full bg-gray-700 text-white placeholder-gray-400"
           />
-          <Button className="bg-red-600 ml-2">
-            <Send className="h-4 w-4" />
+          <Button className="bg-gradient-to-r from-blue-600 to-red-300 ml-2">
+            <Send className="h-4 w-4 text-white" />
           </Button>
         </div>
       </form>

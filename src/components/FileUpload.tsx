@@ -1,29 +1,23 @@
 "use client";
-import { uploadToS3 } from "@/lib/s3";
+import React, { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { Inbox, Loader2 } from "lucide-react";
-import React from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { Inbox, Loader2 } from "lucide-react";
+import { uploadToS3 } from "@/lib/s3";
 
-const FileUpload = () => {
+const MAX_FILE_SIZE = 150 * 1024 * 1024; // 150MB
+const ACCEPTED_FILE_TYPES = { "application/pdf": [".pdf"] };
+
+const FileUpload: React.FC = () => {
   const router = useRouter();
-  const [uploading, setUploading] = React.useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async ({
-      file_key,
-      file_name,
-    }: {
-      file_key: string;
-      file_name: string;
-    }) => {
-      const response = await axios.post("/api/create-chat", {
-        file_key,
-        file_name,
-      });
+    mutationFn: async ({ file_key, file_name }: { file_key: string; file_name: string }) => {
+      const response = await axios.post("/api/create-chat", { file_key, file_name });
       return response.data;
     },
     onSuccess: ({ chat_id }) => {
@@ -36,34 +30,50 @@ const FileUpload = () => {
     },
   });
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: { "application/pdf": [".pdf"] },
-    maxFiles: 1,
-    onDrop: async (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      if (file.size > 10 * 1024 * 1024) {
-        // bigger than 10mb!
-        toast.error("File too large");
-        return;
-      }
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("File too large");
+      return;
+    }
 
-      try {
-        setUploading(true);
-        const data = await uploadToS3(file);
-        console.log("meow", data);
-        if (!data?.file_key || !data.file_name) {
-          toast.error("Something went wrong");
-          return;
-        }
-        mutate(data);
-      } catch (error) {
-        console.log(error);
-        toast.error("Error uploading file");
-      } finally {
-        setUploading(false);
+    try {
+      setUploading(true);
+      const data = await uploadToS3(file);
+      if (!data?.file_key || !data.file_name) {
+        throw new Error("Invalid upload response");
       }
-    },
+      mutate(data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error uploading file");
+    } finally {
+      setUploading(false);
+    }
+  }, [mutate]);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: ACCEPTED_FILE_TYPES,
+    maxFiles: 1,
+    onDrop,
   });
+
+  const content = useMemo(() => {
+    if (uploading || isPending) {
+      return (
+        <>
+          <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
+          <p className="mt-2 text-sm text-slate-400">Uploading file(Please delete after use)</p>
+        </>
+      );
+    }
+    return (
+      <>
+        <Inbox className="w-10 h-10 text-blue-500" />
+        <p className="mt-2 text-sm text-slate-400">Drop PDF Here(Under 150MB)</p>
+      </>
+    );
+  }, [uploading, isPending]);
 
   return (
     <div className="p-2 bg-white rounded-xl">
@@ -74,23 +84,10 @@ const FileUpload = () => {
         })}
       >
         <input {...getInputProps()} />
-        {uploading || isPending ? (
-          <>
-            {/* loading state */}
-            <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
-            <p className="mt-2 text-sm text-slate-400">
-              Uploading file
-            </p>
-          </>
-        ) : (
-          <>
-            <Inbox className="w-10 h-10 text-blue-500" />
-            <p className="mt-2 text-sm text-slate-400">Drop PDF Here</p>
-          </>
-        )}
+        {content}
       </div>
     </div>
   );
 };
 
-export default FileUpload;
+export default React.memo(FileUpload);

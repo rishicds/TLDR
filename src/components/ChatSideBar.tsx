@@ -3,10 +3,9 @@ import { DrizzleChat } from "@/lib/db/schema";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
-import { MessageCircle, PlusCircle } from "lucide-react";
+import { MessageCircle, PlusCircle, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
-import SubscriptionButton from "./SubscriptionButton";
 
 type Props = {
   chats: DrizzleChat[];
@@ -16,31 +15,57 @@ type Props = {
 
 const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
   const [loading, setLoading] = React.useState(false);
+  const [chatList, setChatList] = React.useState(chats);
+
+  const deleteChat = async (id: number) => {
+    try {
+      setLoading(true);
+      const response = await axios.delete('/api/chat', { data: { chatId: id } });
+      if (response.status === 200) {
+        setChatList(chatList.filter(chat => chat.id !== id));
+      } else {
+        console.error(`Failed to delete chat: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Failed to delete chat:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="w-full h-full p-4 text-white bg-orange-900">
+    <div className="w-full h-full p-4 text-white bg-gray-900">
       <Link href="/">
-        <Button className="w-full bg-red-600 border-solid border-2 border-white">
+        <Button className="w-full bg-gradient-to-r from-red-500 to-blue-500 border-solid border-2 border-white">
           <PlusCircle className="mr-2 w-4 h-4" />
           New Chat
         </Button>
       </Link>
 
       <div className="flex max-h-screen pb-20 flex-col gap-2 mt-4">
-        {chats.map((chat) => (
-          <Link key={chat.id} href={`/chat/${chat.id}`}>
-            <div
-              className={cn("rounded-lg p-3 text-slate-300 flex items-center", {
-                "bg-red-600 text-white": chat.id === chatId,
-                "hover:text-white": chat.id !== chatId,
-              })}
+        {chatList.map((chat) => (
+          <div key={chat.id} className="flex items-center">
+            <Link href={`/chat/${chat.id}`} className="flex-1">
+              <div
+                className={cn("rounded-lg p-3 text-wrap text-slate-300 flex items-center", {
+                  "bg-gradient-to-r from-blue-600 to-red-300 text-white": chat.id === chatId,
+                  "hover:text-white": chat.id !== chatId,
+                })}
+              >
+                <MessageCircle className="mr-2" />
+                <p className="w-full overflow-hidden text-sm truncate whitespace-wrap text-wrap">
+                  {chat.pdfName}
+                </p>
+              </div>
+            </Link>
+            <Button
+              className="ml-2 bg-gradient-to-r from-red-600 to-red-500 border-solid border-2 border-white"
+              onClick={() => deleteChat(chat.id)}
+              disabled={loading}
             >
-              <MessageCircle className="mr-2" />
-              <p className="w-full overflow-hidden text-sm truncate whitespace-nowrap text-ellipsis">
-                {chat.pdfName}
-              </p>
-            </div>
-          </Link>
+              <Trash className="w-4 h-4" />
+            </Button>
+          </div>
         ))}
       </div>
     </div>

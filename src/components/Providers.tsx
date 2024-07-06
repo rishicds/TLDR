@@ -9,7 +9,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     defaultOptions: {
       queries: {
         // Choosing to set a default stale time to avoid refetching immediately on tab focus
-        staleTime: 60 * 1000, // 1 minute
+        staleTime: 60 * 5000, // 1 minute
       },
     },
   }));
