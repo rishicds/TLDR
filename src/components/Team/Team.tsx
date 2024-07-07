@@ -83,7 +83,7 @@ const Team = () => {
               <p className="mb-1 text-lg font-bold text-gray-100">
                 Aditi Ghosh
               </p>
-              <p className="mb-4 text-xs text-gray-100">Amar Pet Kharap</p>
+              <p className="mb-4 text-xs text-gray-100">I write good code. :)</p>
               <p className="mb-4 text-xs tracking-wide text-gray-400">
                 Good singer
               </p>
