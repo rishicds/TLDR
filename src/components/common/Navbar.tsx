@@ -105,7 +105,7 @@ const Links = () => {
 
   return (
     <div className="hidden items-center gap-2 md:flex">
-      <GlassLink text="Note site" href="/notes" />
+      <GlassLink text="AceAcademy" href="https://ace-academy-live.vercel.app/" />
       {pathname === '/team' ? (
         <GlassLink text="Home" href="/" />
       ) : (
@@ -114,6 +114,7 @@ const Links = () => {
     </div>
   );
 };
+
 interface GlassLinkProps {
   text: string;
   href: string;
@@ -133,11 +134,13 @@ const GlassLink = ({ text, href }: GlassLinkProps) => {
   );
 };
 
-const TextLink = ({ text }: { text: string }) => {
+const TextLink = ({ text, href }: { text: string, href: string }) => {
   return (
-    <a href="/team" className="text-white/90 transition-colors hover:text-white">
-      {text}
-    </a>
+    <Link legacyBehavior href={href}>
+      <a className="text-white/90 transition-colors hover:text-white">
+        {text}
+      </a>
+    </Link>
   );
 };
 
@@ -168,17 +171,6 @@ const Buttons = ({
   </div>
 );
 
-const SignInButton = () => {
-  return (
-    <button className="group relative scale-100 overflow-hidden rounded-lg px-4 py-2 transition-transform hover:scale-105 active:scale-95">
-      <span className="relative z-10 text-white/90 transition-colors group-hover:text-white">
-        Sign in
-      </span>
-      <span className="absolute inset-0 z-0 bg-gradient-to-br from-white/20 to-white/5 opacity-0 transition-opacity group-hover:opacity-100" />
-    </button>
-  );
-};
-
 const MobileMenu = ({ menuOpen }: { menuOpen: boolean }) => {
   const [ref, { height }] = useMeasure();
   return (
@@ -191,8 +183,8 @@ const MobileMenu = ({ menuOpen }: { menuOpen: boolean }) => {
     >
       <div ref={ref} className="flex items-center justify-between px-4 pb-4">
         <div className="flex items-center gap-4">
-          <TextLink text="Notes"  />
-          <TextLink text="Team" />
+          <TextLink text="AceAcademy" href="https://ace-academy-live.vercel.app/" />
+          <TextLink text="Team" href="/team" />
         </div>
         <UserButton afterSignOutUrl="/" />
       </div>

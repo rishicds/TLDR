@@ -8,7 +8,6 @@ import { db } from "@/lib/db";
 import { chats } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import NavBar from "@/components/common/Navbar";
-import BrowserMockup from "@/components/Hero/BrowserMockup";
 import { VanishText } from "@/components/common/VanishText";
 import SquishyPricing from "@/components/Hero/Pricing";
 import TabsFeatures from "@/components/Hero/Features";
