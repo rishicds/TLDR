@@ -3,7 +3,9 @@ A mordern and fast Document Summarizer built using NextJS 14, TailwindCSS, NeonD
 
 ## Demo
 
-Uploading 2024-07-08 18-38-35.mp4…
+https://github.com/rishicds/TLDR/assets/124495375/2b3e94cb-51de-4898-a1dc-d03975ff74d5
+
+
 
 
 ## Tech Stack
