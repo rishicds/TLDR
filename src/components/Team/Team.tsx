@@ -85,7 +85,7 @@ const Team = () => {
               </p>
               <p className="mb-4 text-xs text-gray-100">I write good code.</p>
               <p className="mb-4 text-xs tracking-wide text-gray-400">
-                When I get older I will be stronger, they'll call me freedom just like a wavin' flag.
+                When I get older I will be stronger, they will call me freedom just like a waving flag.
               </p>
               <div className="flex items-center justify-center space-x-3">
                 <a
