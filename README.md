@@ -1,5 +1,11 @@
 # TL;DR
 A mordern and fast Document Summarizer built using NextJS 14, TailwindCSS, NeonDB. Currently supports directly uploads of PDFs and PDF Links
+
+## Demo
+[![TL;DR Demo Video](https://img.youtube.com/vi/8WzQ1KVuGqw/0.jpg)](https://www.youtube.com/embed/8WzQ1KVuGqw?autoplay=1)
+
+
+
 ## Tech Stack
 1. NextJS 14
 2. Tailwind CSS
