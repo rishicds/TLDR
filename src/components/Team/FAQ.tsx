@@ -12,22 +12,22 @@ const BasicFAQ = () => {
         </h3>
         <Question title="Why should I buy TL;DR Premium?" defaultOpen>
           <p>
-            So that I can buy a plate of chowmein every month
+            So that I can buy a plate of chowmein every month. 😁
           </p>
         </Question>
         <Question title="Will Aditi get a cut from subscriptions?">
           <p>
-            No
+            No 😊.
           </p>
         </Question>
-        <Question title="How many licks does it take to get to the center of a tootsie pop?">
+        <Question title="Will there be new features?">
           <p>
-            Lemme know
+            Yes, we have some ideas in the oven. Stay tuned. 😉
           </p>
         </Question>
         <Question title="Is CSE dead?">
           <p>
-            Yes
+            Yes. 💕
           </p>
         </Question>
       </div>

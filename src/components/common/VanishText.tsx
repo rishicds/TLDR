@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export const VanishText = () => {
   return (
-    <div className="pb-12">
+    <div className="pb-12 pt-8">
       <h3 className="text-6xl space-x-2 font-medium text-white sm:text-4xl md:text-5xl lg:text-6xl">
         Talk with your
         <AnimatedText

@@ -45,7 +45,7 @@ const Team = () => {
             <img
               className="object-cover w-full h-56 md:h-64 xl:h-80"
               src="https://media.licdn.com/dms/image/D5603AQFcc8_vrp3w-Q/profile-displayphoto-shrink_800_800/0/1714159671557?e=1725494400&v=beta&t=dLUd-g0ov1Qoqh8QjZsklxDMCh7974KEw8eOL_TSUc4"
-              alt="Person"
+              alt="Rishi Paul"
             />
             <div className="absolute inset-0 flex flex-col justify-center px-5 py-4 text-center transition-opacity duration-300 bg-black bg-opacity-75 opacity-0 hover:opacity-100">
               <p className="mb-1 text-lg font-bold text-gray-100">
@@ -76,16 +76,16 @@ const Team = () => {
           <div className="relative overflow-hidden transition duration-300 transform rounded shadow-lg lg:hover:-translate-y-2 hover:shadow-2xl">
             <img
               className="object-cover w-full h-56 md:h-64 xl:h-80"
-              src="https://res.cloudinary.com/dff97ky68/image/upload/v1714333558/WhatsApp_Image_2024-04-29_at_12.31.12_AM_ohouce.jpg"
-              alt="Person"
+              src="https://res.cloudinary.com/dff97ky68/image/upload/v1720419818/WhatsApp_Image_2024-07-08_at_00.30.33_0240618a_crypq3.jpg"
+              alt="Aditi Ghosh"
             />
             <div className="absolute inset-0 flex flex-col justify-center px-5 py-4 text-center transition-opacity duration-300 bg-black bg-opacity-75 opacity-0 hover:opacity-100">
               <p className="mb-1 text-lg font-bold text-gray-100">
                 Aditi Ghosh
               </p>
-              <p className="mb-4 text-xs text-gray-100">I write good code. :)</p>
+              <p className="mb-4 text-xs text-gray-100">I write good code.</p>
               <p className="mb-4 text-xs tracking-wide text-gray-400">
-                Good singer
+                When I get older I will be stronger, they'll call me freedom just like a wavin' flag.
               </p>
               <div className="flex items-center justify-center space-x-3">
                 <a
