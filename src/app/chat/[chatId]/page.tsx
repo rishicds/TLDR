@@ -8,6 +8,7 @@ import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import ChatNav from "@/components/common/chatnav";
 
 type Props = {
   params: {
@@ -60,7 +61,9 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
   const isPro = await checkSubscription();
 
   return (
+    <div><ChatNav/>
     <div className="flex flex-col h-screen lg:flex-row max-h-screen">
+      
       <div className="flex w-full max-h-screen overflow-auto">
         {/* chat sidebar */}
         <div className="flex-none lg:w-1/5">
@@ -75,6 +78,7 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
           <ChatComponent chatId={parseInt(chatId)} />
         </div>
       </div>
+    </div>
     </div>
   );
 };
