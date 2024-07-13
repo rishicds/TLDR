@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TL;DR
+A mordern and fast Document Summarizer built using NextJS 14, TailwindCSS, NeonDB. Currently supports directly uploads of PDFs and PDF Links
 
-## Getting Started
+## Demo
 
-First, run the development server:
+https://github.com/rishicds/TLDR/assets/124495375/2b3e94cb-51de-4898-a1dc-d03975ff74d5
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+
+
+## Tech Stack
+1. NextJS 14
+2. Tailwind CSS
+3. NeonDB
+4. Pinecone
+5. Clerk
+6. AWS Storage
+
+## How to Install 
+1. Fork and ⭐ the repository
+2. Clone the repository using `git clone https://github.com/rishicds/TLDR.git`
+3. Install the dependencies using `npm i`.
+4. Fill the env as shown:
 ```
+//clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+//neondb
+DATABASE_URL=
+//AWS
+NEXT_PUBLIC_S3_ACCESS_KEY_ID=
+NEXT_PUBLIC_S3_SECRET_ACCESS_KEY=
+NEXT_PUBLIC_S3_BUCKET_NAME=
+//Pinecone
+PINECONE_ENVIRONMENT=
+PINECONE_API_KEY=
+```
+5. Run the project using `npm run dev`.
+6. run `npx drizzle-kit push` to create schema and push to NeonDB.
+* Note: Make sure you allow Public access on AWS S3 Bucket
+* Set Bucket policy as :
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+* ```
+    {"Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::{bucketName}/*"
+        }
+    ]}
+* Setup CORS to allow your domain
