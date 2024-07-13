@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
@@ -10,6 +10,7 @@ import { uploadToS3 } from "@/lib/s3";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PDFDocument } from 'pdf-lib';
+import { useClerk, useUser } from '@clerk/nextjs';
 
 const MAX_FILE_SIZE = 150 * 1024 * 1024; // 150MB
 const ACCEPTED_FILE_TYPES = { "application/pdf": [".pdf"] };
@@ -17,9 +18,18 @@ const ACCEPTED_FILE_TYPES = { "application/pdf": [".pdf"] };
 const CORS_PROXY = "https://cors.bridged.cc/";
 
 const FileUpload: React.FC = () => {
+  const { isLoaded, user } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pdfLink = searchParams.get("pdfLink");
   const [uploading, setUploading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
+
+  useEffect(() => {
+    if (isLoaded && !user) {
+      router.push('/sign-in');
+    }
+  }, [isLoaded, user, router]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async ({ file_key, file_name }: { file_key: string; file_name: string }) => {
@@ -40,7 +50,7 @@ const FileUpload: React.FC = () => {
     try {
       const pdfDoc = await PDFDocument.load(arrayBuffer);
       console.log("PDF processed successfully. Number of pages:", pdfDoc.getPageCount());
-      
+
       const metadata = pdfDoc.getTitle();
       console.log("PDF title:", metadata);
 
@@ -92,12 +102,12 @@ const FileUpload: React.FC = () => {
 
     try {
       setUploading(true);
-      const response = await axios.get(`${CORS_PROXY}${pdfUrl}`, { 
+      const response = await axios.get(`${CORS_PROXY}${pdfUrl}`, {
         responseType: 'arraybuffer',
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
       });
       const arrayBuffer = response.data;
-      
+
       if (arrayBuffer.byteLength > MAX_FILE_SIZE) {
         toast.error("File too large");
         return;
@@ -119,6 +129,13 @@ const FileUpload: React.FC = () => {
       setUploading(false);
     }
   };
+
+  useEffect(() => {
+    if (pdfLink) {
+      setPdfUrl(pdfLink);
+      handleUrlUpload();
+    }
+  }, [pdfLink]);
 
   const content = useMemo(() => {
     if (uploading || isPending) {
