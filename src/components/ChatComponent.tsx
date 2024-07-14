@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Input } from "./ui/input";
 import { useChat } from "ai/react";
 import { Button } from "./ui/button";
@@ -30,8 +30,10 @@ const ChatComponent = ({ chatId }: Props) => {
     initialMessages: data || [],
   });
 
-  React.useEffect(() => {
-    const messageContainer = document.getElementById("message-container");
+  const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const messageContainer = messageContainerRef.current;
     if (messageContainer) {
       messageContainer.scrollTo({
         top: messageContainer.scrollHeight,
@@ -41,30 +43,34 @@ const ChatComponent = ({ chatId }: Props) => {
   }, [messages]);
 
   return (
-    <div
-      className="w-full h-full overflow-auto flex flex-col bg-gray-900 text-white"
-      id="message-container"
-    >
+    <div className="flex flex-col h-screen w-full bg-gray-900 text-white">
       {/* header */}
-      <div className="sticky top-0 inset-x-0 p-2 bg-gray-800 h-fit">
+      <div className="sticky top-0 inset-x-0 p-2 bg-gray-800 h-fit z-10">
         <h3 className="text-xl font-bold">Chat</h3>
       </div>
 
       {/* message list */}
-      <MessageList messages={messages} isLoading={isLoading} />
+      <div 
+        ref={messageContainerRef}
+        className="flex-grow overflow-y-auto px-2 py-4 w-full"
+        id="message-container"
+      >
+        <MessageList messages={messages} isLoading={isLoading} />
+      </div>
 
+      {/* input form */}
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-gray-800"
+        className="sticky bottom-0 inset-x-0 p-2 bg-gray-800 w-full"
       >
-        <div className="flex">
+        <div className="flex w-full">
           <Input
             value={input}
             onChange={handleInputChange}
             placeholder="Ask your question :)"
-            className="w-full bg-gray-700 text-white placeholder-gray-400"
+            className="flex-grow bg-gray-700 text-white placeholder-gray-400"
           />
-          <Button className="bg-gradient-to-r from-blue-600 to-red-300 ml-2">
+          <Button className="bg-gradient-to-r from-blue-600 to-red-300 ml-2 whitespace-nowrap">
             <Send className="h-4 w-4 text-white" />
           </Button>
         </div>
