@@ -48,12 +48,12 @@ const InteractiveChatLayout: React.FC<InteractiveChatLayoutProps> = ({
       </div>
       
       {/* PDF Viewer */}
-      <div className={`${activeComponent === 'pdf' ? 'block' : 'hidden'} lg:block lg:w-3/5 overflow-y-auto h-[calc(100vh-3rem)] lg:h-auto`}>
+      <div className={`${activeComponent === 'pdf' ? 'block' : 'hidden'} lg:block lg:w-3/5 overflow-y-auto h-[calc(100vh-8rem)] lg:h-auto`}>
         <PDFViewer pdf_url={pdfUrl} />
       </div>
       
       {/* Chat Component */}
-      <div className={`${activeComponent === 'chat' ? 'block' : 'hidden'} lg:block flex-grow lg:w-1/3 overflow-y-auto border-t-4 lg:border-t-0 lg:border-l-4 border-slate-200`}>
+      <div className={`${activeComponent === 'chat' ? 'block' : 'hidden'} lg:block flex-grow lg:w-1/3 border-t-4 lg:border-t-0 lg:border-l-4 border-slate-200`}>
         <ChatComponent chatId={chatId} />
       </div>
     </div>

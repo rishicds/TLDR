@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from '@clerk/nextjs';
 import FileUpload from "@/components/FileUpload";
+import NavBar from "@/components/common/Navbar";
 
 const UploadPage = () => {
   const searchParams = useSearchParams();
@@ -26,6 +27,7 @@ const UploadPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-500 to-blue-500">
+      <NavBar />
       <div className="bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Welcome to TL;DR</h1>
         <FileUpload pdfLink={pdfLink} />

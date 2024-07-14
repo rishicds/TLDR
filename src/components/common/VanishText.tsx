@@ -12,7 +12,6 @@ export const VanishText = () => {
             "Notes",
             "Exam Papers",
             "Legal Docs",
-            "Honey Bunny",
           ]}
         />
       </h3>
