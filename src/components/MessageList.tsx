@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Message } from "ai/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, MessageSquare } from "lucide-react";
 import React from "react";
 
 type Props = {
@@ -16,7 +16,16 @@ const MessageList = ({ messages, isLoading }: Props) => {
       </div>
     );
   }
-  if (!messages) return <></>;
+
+  if (!messages || messages.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-gray-400">
+        <MessageSquare className="w-12 h-12 mb-4" />
+        <p className="text-lg font-semibold">No messages yet</p>
+        <p className="text-sm">Start a new conversation by typing below!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2 px-4">
