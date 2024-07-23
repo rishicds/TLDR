@@ -105,7 +105,7 @@ const Links = () => {
 
   return (
     <div className="hidden items-center gap-2 md:flex">
-      <GlassLink text="AceAcademy" href="https://ace-academy-live.vercel.app/" />
+      <GlassLink text="EngiDocs" href="https://engidocs.vercel.app/" />
       {pathname === '/team' ? (
         <GlassLink text="Home" href="/" />
       ) : (
