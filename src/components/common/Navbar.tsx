@@ -183,7 +183,7 @@ const MobileMenu = ({ menuOpen }: { menuOpen: boolean }) => {
     >
       <div ref={ref} className="flex items-center justify-between px-4 pb-4">
         <div className="flex items-center gap-4">
-          <TextLink text="EngiDocs" href="https://ace-academy-live.vercel.app/" />
+          <TextLink text="EngiDocs" href="https://engidocs.vercel.app/" />
           <TextLink text="Team" href="/team" />
         </div>
         <UserButton afterSignOutUrl="/" />
