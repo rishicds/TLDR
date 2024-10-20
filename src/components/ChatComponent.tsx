@@ -52,10 +52,10 @@ const ChatComponent = ({ chatId }: Props) => {
       {/* message list */}
       <div 
         ref={messageContainerRef}
-        className="flex-grow overflow-y-auto px-2 py-4 w-full"
+        className="flex-grow overflow-y-auto px-2 py-4 pb-[8rem] w-full"
         id="message-container"
       >
-        <MessageList messages={messages} isLoading={isLoading} />
+        <MessageList messages={messages} isLoading={isLoading} isThinking={false} />
       </div>
 
       {/* input form */}

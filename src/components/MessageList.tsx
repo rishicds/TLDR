@@ -1,62 +1,73 @@
-import { cn } from "@/lib/utils";
-import { Message } from "ai/react";
-import { Loader2, MessageSquare } from "lucide-react";
 import React from "react";
+import { Message } from "ai";
+import { cn } from "@/lib/utils";
 
-type Props = {
-  isLoading: boolean;
+interface MessageListProps {
   messages: Message[];
-};
+  isLoading: boolean;
+  isThinking: boolean;
+}
 
-const MessageList = ({ messages, isLoading }: Props) => {
-  if (isLoading) {
-    return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <Loader2 className="w-6 h-6 animate-spin text-white" />
-      </div>
-    );
-  }
-
-  if (!messages || messages.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <MessageSquare className="w-12 h-12 mb-4" />
-        <p className="text-lg font-semibold">No messages yet</p>
-        <p className="text-sm">Start a new conversation by typing below!</p>
-      </div>
-    );
-  }
+const MessageList: React.FC<MessageListProps> = ({ 
+  messages, 
+  isLoading,
+  isThinking 
+}) => {
+  const filteredMessages = messages.filter(message => message.id !== 'thinking');
+  const showThinking = isThinking || messages.some(msg => msg.id === 'thinking');
 
   return (
-    <div className="flex flex-col gap-2 px-4">
-      {messages.map((message) => {
-        const userMessageStyle = {
-          backgroundImage: "linear-gradient(to right, #EF4444, #2563EB)",
-        };
-
-        return (
+    <div className="space-y-4">
+      {filteredMessages.map((message) => (
+        <div
+          key={message.id}
+          className={cn(
+            "flex items-start gap-4 rounded-lg p-4",
+            message.role === "user"
+              ? "bg-blue-500 bg-opacity-10"
+              : "bg-gray-800"
+          )}
+        >
           <div
-            key={message.id}
-            className={cn("flex", {
-              "justify-end pl-10": message.role === "user",
-              "justify-start pr-10": message.role === "assistant",
-            })}
+            className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center",
+              message.role === "user"
+                ? "bg-blue-600"
+                : "bg-green-600"
+            )}
           >
-            <div
-              className={cn(
-                "rounded-lg px-3 text-sm py-1 shadow-md ring-1",
-                {
-                  "bg-gradient-to-r from-red-600 to-blue-500 text-white ring-red-700/50": message.role === "user",
-                  "bg-gray-800 text-gray-300 ring-gray-700/50": message.role === "assistant",
-                }
-              )}
-              style={message.role === "user" ? userMessageStyle : {}}
-            >
-              <p>{message.content}</p>
+            <span className="text-sm font-medium text-white">
+              {message.role === "user" ? "U" : "A"}
+            </span>
+          </div>
+
+          <div className="flex-1">
+            <div className="font-semibold mb-1">
+              {message.role === "user" ? "You" : "Assistant"}
+            </div>
+            <div className="text-gray-200 whitespace-pre-wrap">
+              {message.content}
             </div>
           </div>
-        );
-      })}
+        </div>
+      ))}
+
+      {(isLoading || showThinking) && (
+        <div className="flex items-start gap-4 rounded-lg p-4 bg-gray-800">
+          <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center">
+            <span className="text-sm font-medium text-white">A</span>
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold mb-1">Assistant</div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-200">Thinking</span>
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
